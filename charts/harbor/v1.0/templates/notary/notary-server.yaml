@@ -19,7 +19,6 @@ spec:
         component: notary-server
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/notary/notary-cm.yaml") . | sha256sum }}
-        checksum/secret-core: {{ include (print $.Template.BasePath "/core/core-secret.yaml") . | sha256sum }}
 {{- if .Values.notary.podAnnotations }}
 {{ toYaml .Values.notary.podAnnotations | indent 8 }}
 {{- end }}
@@ -28,10 +27,8 @@ spec:
       - name: notary-server
         image: {{ .Values.notary.server.image.repository }}:{{ .Values.notary.server.image.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
-{{- if .Values.notary.server.resources }}
         resources:
 {{ toYaml .Values.notary.server.resources | indent 10 }}
-{{- end }}
         env:
         - name: MIGRATIONS_PATH
           value: migrations/server/postgresql

@@ -20,7 +20,6 @@ spec:
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/chartmuseum/chartmuseum-cm.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/chartmuseum/chartmuseum-secret.yaml") . | sha256sum }}
-        checksum/secret-core: {{ include (print $.Template.BasePath "/core/core-secret.yaml") . | sha256sum }}
 {{- if .Values.chartmuseum.podAnnotations }}
 {{ toYaml .Values.chartmuseum.podAnnotations | indent 8 }}
 {{- end }}
@@ -41,10 +40,8 @@ spec:
             port: 9999
           initialDelaySeconds: 1
           periodSeconds: 10
-{{- if .Values.chartmuseum.resources }}
         resources:
 {{ toYaml .Values.chartmuseum.resources | indent 10 }}
-{{- end }}
         envFrom:
         - configMapRef:
             name: "{{ template "harbor.chartmuseum" . }}"
